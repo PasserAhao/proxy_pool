@@ -1,14 +1,13 @@
-version: '2'
+version: '3'
 services:
-  proxy_pool:
-    build: .
-    container_name: proxy_pool
+  spider:
+    image: bonianahao/spider:1.0.1
     ports:
       - "5010:5010"
-    links:
-      - proxy_redis
     environment:
-      DB_CONN: "redis://@proxy_redis:6379/0"
-  proxy_redis:
-    image: "redis"
-    container_name: proxy_redis
+      DB_CONN: "redis://192.168.100.78:6379/0"  # Use the service name and port of the redis container
+
+  redis-test:
+    image: redis:6.0.6
+    ports:
+      - "6666:6379"
