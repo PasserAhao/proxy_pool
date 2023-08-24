@@ -1,11 +1,11 @@
 version: '3'
 services:
   spider:
-    image: bonianahao/spider:1.0.1
+    image: bonianahao/spider:1.2.0
     ports:
       - "5010:5010"
     environment:
-      DB_CONN: "redis://192.168.100.78:6379/0"  # Use the service name and port of the redis container
+      DB_CONN: "redis://192.168.100.42:6666/0"  # Use the service name and port of the redis container
 
   redis:
     image: redis:6.0.6

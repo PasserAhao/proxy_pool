@@ -42,55 +42,55 @@ class JsonResponse(Response):
 app.response_class = JsonResponse
 
 api_list = [
-    {"url": "/get", "params": "type: ''https'|''", "desc": "get a proxy"},
-    {"url": "/pop", "params": "", "desc": "get and delete a proxy"},
-    {"url": "/delete", "params": "proxy: 'e.g. 127.0.0.1:8080'", "desc": "delete an unable proxy"},
-    {"url": "/all", "params": "type: ''https'|''", "desc": "get all proxy from proxy pool"},
-    {"url": "/count", "params": "", "desc": "return proxy count"}
+    {"url": "/proxy/get", "params": "type: ''https'|''", "desc": "get a proxy"},
+    {"url": "/proxy/pop", "params": "", "desc": "get and delete a proxy"},
+    {"url": "/proxy/delete", "params": "proxy: 'e.g. 127.0.0.1:8080'", "desc": "delete an unable proxy"},
+    {"url": "/proxy/all", "params": "type: ''https'|''", "desc": "get all proxy from proxy pool"},
+    {"url": "/proxy/count", "params": "", "desc": "return proxy count"}
     # 'refresh': 'refresh proxy pool',
 ]
 
 
-@app.route('/')
+@app.route('/proxy')
 def index():
     return {'url': api_list}
 
 
-@app.route('/get/')
+@app.route('/proxy/get/')
 def get():
     https = request.args.get("type", "").lower() == 'https'
     proxy = proxy_handler.get(https)
     return proxy.to_dict if proxy else {"code": 0, "src": "no proxy"}
 
 
-@app.route('/pop/')
+@app.route('/proxy/pop/')
 def pop():
     https = request.args.get("type", "").lower() == 'https'
     proxy = proxy_handler.pop(https)
     return proxy.to_dict if proxy else {"code": 0, "src": "no proxy"}
 
 
-@app.route('/refresh/')
+@app.route('/proxy/refresh/')
 def refresh():
     # TODO refresh会有守护程序定时执行，由api直接调用性能较差，暂不使用
     return 'success'
 
 
-@app.route('/all/')
+@app.route('/proxy/all/')
 def getAll():
     https = request.args.get("type", "").lower() == 'https'
     proxies = proxy_handler.getAll(https)
     return jsonify([_.to_dict for _ in proxies])
 
 
-@app.route('/delete/', methods=['GET'])
+@app.route('/proxy/delete/', methods=['GET'])
 def delete():
     proxy = request.args.get('proxy')
     status = proxy_handler.delete(Proxy(proxy))
     return {"code": 0, "src": status}
 
 
-@app.route('/count/')
+@app.route('/proxy/count/')
 def getCount():
     proxies = proxy_handler.getAll()
     http_type_dict = {}
